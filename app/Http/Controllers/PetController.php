@@ -62,7 +62,6 @@ class PetController extends Controller
                 ->withErrors(['pet_input' => 'Hewan dengan nama dan jenis yang sama sudah dimiliki oleh pemilik ini.']);
         }
 
-        // Generate kode registrasi
         $kode = Pet::generateKodeRegistrasi($request->owner_id);
 
         Pet::create([
@@ -112,7 +111,6 @@ class PetController extends Controller
             return back()->withInput()->withErrors(['pet_input' => $e->getMessage()]);
         }
 
-        // Cek duplikasi kecuali diri sendiri
         $duplikat = Pet::where('owner_id', $request->owner_id)
             ->where('nama', $parsed['nama'])
             ->where('jenis', $parsed['jenis'])
@@ -147,27 +145,21 @@ class PetController extends Controller
 
     private function parsePetInput(string $input): array
     {
-        // Bersihkan spasi berlebih
         $input = trim(preg_replace('/\s+/', ' ', $input));
 
-        // Pecah berdasarkan spasi
         $parts = explode(' ', $input);
 
         if (count($parts) < 4) {
             throw new \Exception('Format input tidak valid. Gunakan format: NAMA JENIS USIA BERAT. Contoh: Milo Kucing 2Th 4.5kg');
         }
 
-        // Nama hewan = bagian pertama
         $nama = strtoupper($parts[0]);
 
-        // Jenis hewan = bagian kedua
         $jenis = strtoupper($parts[1]);
 
-        // Usia = bagian ketiga - bersihkan satuan
         $usiaMentah = $parts[2];
         $usia    = $this->parseAge($usiaMentah);
 
-        // Berat = bagian keempat - bersihkan satuan
         $beratMentah = $parts[3];
         $berat    = $this->parseWeight($beratMentah);
 
@@ -180,12 +172,9 @@ class PetController extends Controller
     }
 
     /**
-     * Parse usia dari berbagai format:
-     * 2tahun, 2thn, 2th, 2Tahun, 2TH, 2 tahun, dll
      */
     private function parseAge(string $raw): float
     {
-        // Hapus semua huruf (tahun, thn, th, dll) - case insensitive
         $clean = preg_replace('/[a-zA-Z]/i', '', $raw);
         $clean = trim($clean);
 
@@ -197,14 +186,11 @@ class PetController extends Controller
     }
 
     /**
-     * Parse berat dari berbagai format:
-     * 4.5kg, 4,5kg, 4.5 KG, 4,5KG, dll
+
      */
     private function parseWeight(string $raw): float
     {
-        // Hapus semua huruf (kg, KG, dll)
         $clean = preg_replace('/[a-zA-Z]/i', '', $raw);
-        // Ganti koma dengan titik (format desimal Indonesia)
         $clean = str_replace(',', '.', $clean);
         $clean = trim($clean);
 

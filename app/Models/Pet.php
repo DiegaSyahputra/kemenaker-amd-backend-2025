@@ -27,7 +27,6 @@ class Pet extends Model
 
         $code = $hhmm . $ownerPad . $seqPad;
 
-        // Pastikan unik
         while (self::where('kode_registrasi', $code)->exists()) {
             $sequence++;
             $seqPad = str_pad($sequence, 4, '0', STR_PAD_LEFT);
