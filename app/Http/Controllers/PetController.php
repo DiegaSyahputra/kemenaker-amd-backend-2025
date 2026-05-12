@@ -14,7 +14,7 @@ class PetController extends Controller
      */
     public function index()
     {
-        $pets = Pet::with('owner')->latest()->paginate(10);
+        $pets = Pet::with('owner')->withCount('checkups')->latest()->paginate(10);
         return view('pets.index', compact('pets'));
     }
 

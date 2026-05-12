@@ -54,7 +54,7 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <span><i class="bi bi-clipboard2-pulse me-2 text-success"></i>Riwayat Pemeriksaan
+                    <span>Riwayat Pemeriksaan
                         ({{ $pet->checkups->count() }})</span>
                     <a href="{{ route('checkups.create') }}" class="btn btn-sm btn-primary">
                         <i class="bi bi-plus-lg me-1"></i>Tambah Pemeriksaan
